@@ -132,3 +132,7 @@ dkms.conf
 
 # VS Code files
 .vscode
+/cmake-build-debug/
+/CMakeFiles/
+/.idea/
+/.cmake/
