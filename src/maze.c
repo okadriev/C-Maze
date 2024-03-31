@@ -153,7 +153,7 @@ int main() {
   draw(&maze);
   printf("\n\n");
   Maze maze2 = {0};
-  read_from_file(&maze2, "test_lab.txt");
+  read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
   draw(&maze2);
 
   return 0;
