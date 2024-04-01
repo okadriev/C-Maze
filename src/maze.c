@@ -1,6 +1,37 @@
 #include "maze.h"
 
+void write_to_file(const Maze* test, char* filename) {
+  FILE* file = fopen(filename, "wt");
+  if (file != NULL) {
+    fprintf(file, "%d %d\n", test->y, test->x);
+    for (int i = 0; i < test->y; i++) {
+      for (int j = 0; j < test->x; j++) {
+        putc(test->vertical[i][j] + 48, file);
+        if (j != test->x - 1) {
+          putc(' ', file);  // ToDo по условию}
+        }
+      }
+      putc('\n', file);
+    }
+    putc('\n', file);
+    // ToDo Устранить дублирование кода
+    for (int i = 0; i < test->y; i++) {
+      for (int j = 0; j < test->x; j++) {
+        putc(test->horizontal[i][j] + 48, file);
+        if (j != test->x - 1) {
+          putc(' ', file);  // ToDo по условию}
+        }
+      }
+      if (i != test->y - 1) {
+        putc('\n', file);
+      }
+    }
+    fclose(file);
+  }
+}
+
 void read_from_file(Maze* test, char* filename) {
+  // ToDo Возвращать ошибку в случае сбоя
   FILE* file = fopen(filename, "rt");
   if (file != NULL) {
     int cur = 0;
@@ -28,6 +59,7 @@ void read_from_file(Maze* test, char* filename) {
       }
       last = cur;
     }
+    fclose(file);
   }
 }
 
@@ -173,6 +205,7 @@ int main() {
   print_map(maze);
   printf("\n\n");
 
+  write_to_file(&maze, "test.txt");
   Maze maze2 = {0};
   read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
   draw(&maze2);
