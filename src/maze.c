@@ -1,13 +1,5 @@
 #include "maze.h"
 
-typedef struct Maze_struct {
-  int vertical[MAZE_Y + 1][MAZE_X + 1];
-  int horizontal[MAZE_Y + 1][MAZE_X + 1];
-  int map[MAZE_Y * 2 + 1][MAZE_X * 2 + 1];
-  int x;
-  int y;
-} Maze;
-
 void read_from_file(Maze* test, char* filename) {
   FILE* file = fopen(filename, "rt");
   if (file != NULL) {
