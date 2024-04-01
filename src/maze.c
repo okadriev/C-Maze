@@ -14,6 +14,37 @@ typedef struct Maze_struct {
   int y;
 } Maze;
 
+void read_from_file(Maze* test, char* filename) {
+  FILE* file = fopen(filename, "rt");
+  if (file != NULL) {
+    int cur = 0;
+    int last = 0;
+    int flag = 1;
+    int i = 0;
+    int j = 0;
+    // ToDo Обработать ошибку scanf
+    fscanf(file, "%d%d\n", &test->y, &test->x);
+    while ((cur = fgetc(file)) != EOF) {
+      if (cur == '1' || cur == '0') {
+        if (flag) {
+          test->vertical[i][j] = cur - 48;
+        } else {
+          test->horizontal[i][j] = cur - 48;
+        }
+        j++;
+      } else if (cur == '\n' && last == '\n') {
+        flag = 0;
+        i = 0;
+        j = 0;
+      } else if (cur == '\n') {
+        i++;
+        j = 0;
+      }
+      last = cur;
+    }
+  }
+}
+
 void draw(Maze* test) {
   for (int i = 0; i < 4 * MAZE_X + 1; i++) {
     printf("#");
@@ -120,6 +151,10 @@ int main() {
     maze.vertical[y][MAZE_X - 1] = 1;
   }
   draw(&maze);
+  printf("\n\n");
+  Maze maze2 = {0};
+  read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
+  draw(&maze2);
 
   return 0;
 }
