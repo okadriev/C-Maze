@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAZE_X 10  // delete me
-#define MAZE_Y 10  // delete me
+#define MAZE_X 15  // delete me
+#define MAZE_Y 7  // delete me
 
 typedef struct Maze_struct {
   int vertical[51][51];
@@ -21,5 +21,6 @@ void draw(Maze* test);
 void get_map(Maze* test);
 void print_map(Maze maze);
 int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2);
+void group_swap(int group[][MAZE_X + 1], int target, int swap, int line);
 
 #endif
