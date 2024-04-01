@@ -101,7 +101,7 @@ void get_map(Maze* maze) {
   }
 }
 
-void draw_map(Maze maze) {
+void print_map(Maze maze) {
   for (int i = 0; i < maze.y * 2 + 1; i++) {
     for (int j = 0; j < maze.x * 2 + 1; j++) {
       printf((maze.map[i][j]) ? "##" : "  ");
@@ -183,7 +183,7 @@ int main() {
   }
 
   get_map(&maze);
-  draw_map(maze);
+  print_map(maze);
   printf("\n\n");
 
   Maze maze2 = {0};
