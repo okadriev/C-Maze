@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
 #include <time.h>
 
 #define MAZE_X 10  // delete me
@@ -21,5 +20,6 @@ void read_from_file(Maze* test, char* filename);
 void draw(Maze* test);
 void get_map(Maze* test);
 void print_map(Maze maze);
+int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2);
 
 #endif

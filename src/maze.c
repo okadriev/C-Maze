@@ -123,10 +123,56 @@ void get_map(Maze* maze) {
 void print_map(Maze maze) {
   for (int i = 0; i < maze.y * 2 + 1; i++) {
     for (int j = 0; j < maze.x * 2 + 1; j++) {
-      printf((maze.map[i][j]) ? "##" : "  ");
+      int pixel = maze.map[i][j];
+      printf((pixel == 2) ? "<>" : ((pixel == 1) ? "##" : "  "));
     }
     printf("\n");
   }
+  printf("\n");
+}
+
+int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
+  int get_path = 0;
+  int x = x_1 * 2 + 1;
+  int y = y_1 * 2 + 1;
+  maze->map[y][x] = -1;
+
+  if (x_1 != x_2 || y_1 != y_2) {
+    // можно немного оптимизировать добавив ( && !get_path) в условие if
+    if (maze->map[y][x + 1] == 0 && maze->map[y][x + 2] == 0) {
+      if (find_path(maze, y_1, x_1 + 1, y_2, x_2)) {
+        maze->map[y][x] = 2;
+        get_path = 1;
+      }
+    }
+
+    if (maze->map[y + 1][x] == 0 && maze->map[y + 2][x] == 0) {
+      if (find_path(maze, y_1 + 1, x_1, y_2, x_2)) {
+        maze->map[y][x] = 2;
+        get_path = 1;
+      }
+    }
+
+    if (maze->map[y][x - 1] == 0 && maze->map[y][x - 2] == 0) {
+      if (find_path(maze, y_1, x_1 - 1, y_2, x_2)) {
+        maze->map[y][x] = 2;
+        get_path = 1;
+      }
+    }
+
+    if (maze->map[y - 1][x] == 0 && maze->map[y - 2][x] == 0) {
+      if (find_path(maze, y_1 - 1, x_1, y_2, x_2)) {
+        maze->map[y][x] = 2;
+        get_path = 1;
+      }
+    }
+
+  } else {
+    maze->map[y][x] = 2;
+    get_path = 1;
+  }
+
+  return get_path;
 }
 
 int main() {
@@ -201,13 +247,28 @@ int main() {
     maze.vertical[y][MAZE_X - 1] = 1;
   }
 
+  printf("\nPrint generate labyrinth:\n\n");
   get_map(&maze);
   print_map(maze);
-  printf("\n\n");
 
-  write_to_file(&maze, "test.txt");
+  printf("Print labyrinth with path:\n\n");
+  int start_x = 0; // add struct point(x,y)?
+  int start_y = 9;
+  int end_x = 9;
+  int end_y = 0;
+  if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
+    printf("There is no path\n");
+    maze.map[start_y][start_x] = 2;
+    maze.map[end_y][end_x] = 2;
+  }
+  print_map(maze);
+  write_to_file(&maze, "../data-samples/test.txt");
+
+  printf("Print labyrinth from file: 2 ways\n\n");
   Maze maze2 = {0};
   read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
+  get_map(&maze2);
+  print_map(maze2);
   draw(&maze2);
 
   return 0;
