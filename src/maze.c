@@ -124,7 +124,7 @@ int main() {
     if (y < MAZE_Y - 1) {
       for (int x = 0; x < MAZE_X; x++) {
         if (maze.horizontal[y][x] == 0) {
-          maze.group[y][x + 1] = maze.group[y][x];
+          maze.group[y + 1][x] = maze.group[y][x];
         }
       }
 
