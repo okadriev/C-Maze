@@ -1,9 +1,9 @@
 #include "maze.h"
 
 typedef struct Maze_struct {
-  int group[MAZE_Y + 1][MAZE_X + 1];
   int vertical[MAZE_Y + 1][MAZE_X + 1];
   int horizontal[MAZE_Y + 1][MAZE_X + 1];
+  int map[MAZE_Y * 2 + 1][MAZE_X * 2 + 1];
   int x;
   int y;
 } Maze;
@@ -76,27 +76,59 @@ void draw(Maze* test) {
   }
 }
 
+void get_map(Maze* maze) {
+  for (int i = 0; i < maze->x * 2 + 1; i++) {
+    maze->map[0][i] = 1;
+  }
+
+  for (int i = 0; i < maze->y * 2 + 1; i++) {
+    maze->map[i][0] = 1;
+  }
+
+  for (int y = maze->y - 1; y >= 0; y--) {
+    for (int x = maze->x - 1; x >= 0; x--) {
+      maze->map[y * 2 + 2][x * 2 + 2] =
+          maze->horizontal[y][x] || maze->vertical[y][x] ||
+          maze->horizontal[y][x + 1] || maze->vertical[y + 1][x];
+      maze->map[y * 2 + 2][x * 2 + 1] = maze->horizontal[y][x];
+      maze->map[y * 2 + 1][x * 2 + 2] = maze->vertical[y][x];
+    }
+  }
+}
+
+void print_map(Maze maze) {
+  for (int i = 0; i < maze.y * 2 + 1; i++) {
+    for (int j = 0; j < maze.x * 2 + 1; j++) {
+      printf((maze.map[i][j]) ? "##" : "  ");
+    }
+    printf("\n");
+  }
+}
+
 int main() {
   srand(time(NULL));
   Maze maze = {0};
-  int group = 1;
+  maze.y = MAZE_Y;
+  maze.x = MAZE_X;
+  int group[MAZE_Y + 1][MAZE_X + 1] = {0};
+  int group_count = 1;
 
   for (int y = 0; y < MAZE_Y; y++) {
     for (int x = 0; x < MAZE_X; x++) {
-      if (!maze.group[y][x]) maze.group[y][x] = group++;
+      if (!group[y][x]) group[y][x] = group_count++;
     }
 
     for (int x = 0; x < MAZE_X - 1; x++) {
-      if (maze.group[y][x] == maze.group[y][x + 1] || rand() & 1) {
+      if (group[y][x] == group[y][x + 1] || rand() & 1) {
         maze.vertical[y][x] = 1;
 
       } else {
-        int group_to_swap = maze.group[y][x + 1];
-        int target = maze.group[y][x];
+        int group_to_swap = group[y][x + 1];
+        int target = group[y][x];
 
         for (int i = 0; i < MAZE_X; i++) {
-          if (maze.group[y][i] == group_to_swap) {
-            maze.group[y][i] = target;
+          if (group[y][i] == group_to_swap) {
+            group[y][i] = target;
           }
         }
       }
@@ -105,7 +137,7 @@ int main() {
     for (int x = 0; x < MAZE_X; x++) {
       int count = 0;
       for (int i = 0; i < MAZE_X; i++) {
-        if ((maze.group[y][i] == maze.group[y][x]) && (i != x)) {
+        if ((group[y][i] == group[y][x]) && (i != x)) {
           if (!maze.horizontal[y][i]) count++;
         }
       }
@@ -118,21 +150,21 @@ int main() {
     if (y < MAZE_Y - 1) {
       for (int x = 0; x < MAZE_X; x++) {
         if (maze.horizontal[y][x] == 0) {
-          maze.group[y + 1][x] = maze.group[y][x];
+          group[y + 1][x] = group[y][x];
         }
       }
 
     } else {
       for (int x = 0; x < MAZE_X - 1; x++) {
-        if (maze.group[y][x] != maze.group[y][x + 1]) {
+        if (group[y][x] != group[y][x + 1]) {
           maze.vertical[y][x] = 0;
 
-          int group_to_swap = maze.group[y][x + 1];
-          int target = maze.group[y][x];
+          int group_to_swap = group[y][x + 1];
+          int target = group[y][x];
 
           for (int i = x; i < MAZE_X; i++) {
-            if (maze.group[y][i] == group_to_swap) {
-              maze.group[y][i] = target;
+            if (group[y][i] == group_to_swap) {
+              group[y][i] = target;
             }
           }
         }
@@ -144,8 +176,11 @@ int main() {
     maze.horizontal[MAZE_Y - 1][y] = 1;
     maze.vertical[y][MAZE_X - 1] = 1;
   }
-  draw(&maze);
+
+  get_map(&maze);
+  print_map(maze);
   printf("\n\n");
+
   Maze maze2 = {0};
   read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
   draw(&maze2);
