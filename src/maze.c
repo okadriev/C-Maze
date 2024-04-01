@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/time.h>
-#include <time.h>
-
-#define MAZE_X 10
-#define MAZE_Y 10
+#include "maze.h"
 
 typedef struct Maze_struct {
   int group[MAZE_Y + 1][MAZE_X + 1];
