@@ -175,6 +175,14 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
   return get_path;
 }
 
+void group_swap(int group[][MAZE_X + 1], int target, int swap, int line) {
+  for (int i = 0; i < MAZE_X; i++) {
+    if (group[line][i] == swap) {
+      group[line][i] = target;
+    }
+  }
+}
+
 int main() {
   srand(time(NULL));
   Maze maze = {0};
@@ -193,22 +201,15 @@ int main() {
         maze.vertical[y][x] = 1;
 
       } else {
-        int group_to_swap = group[y][x + 1];
-        int target = group[y][x];
-
-        for (int i = 0; i < MAZE_X; i++) {
-          if (group[y][i] == group_to_swap) {
-            group[y][i] = target;
-          }
-        }
+        group_swap(group, group[y][x], group[y][x + 1], y);
       }
     }
 
     for (int x = 0; x < MAZE_X; x++) {
       int count = 0;
       for (int i = 0; i < MAZE_X; i++) {
-        if ((group[y][i] == group[y][x]) && (i != x)) {
-          if (!maze.horizontal[y][i]) count++;
+        if (group[y][i] == group[y][x] && !maze.horizontal[y][i]) {
+          count++;
         }
       }
 
@@ -228,23 +229,18 @@ int main() {
       for (int x = 0; x < MAZE_X - 1; x++) {
         if (group[y][x] != group[y][x + 1]) {
           maze.vertical[y][x] = 0;
-
-          int group_to_swap = group[y][x + 1];
-          int target = group[y][x];
-
-          for (int i = x; i < MAZE_X; i++) {
-            if (group[y][i] == group_to_swap) {
-              group[y][i] = target;
-            }
-          }
+          group_swap(group, group[y][x], group[y][x + 1], y);
         }
       }
     }
   }
 
-  for (int y = 0; y < MAZE_Y; y++) {
-    maze.horizontal[MAZE_Y - 1][y] = 1;
-    maze.vertical[y][MAZE_X - 1] = 1;
+  for (int i = 0; i < MAZE_X; i++) {
+    maze.horizontal[MAZE_Y - 1][i] = 1;
+  }
+
+  for (int i = 0; i < MAZE_Y; i++) {
+    maze.vertical[i][MAZE_X - 1] = 1;
   }
 
   printf("\nPrint generate labyrinth:\n\n");
@@ -252,9 +248,9 @@ int main() {
   print_map(maze);
 
   printf("Print labyrinth with path:\n\n");
-  int start_x = 0; // add struct point(x,y)?
-  int start_y = 9;
-  int end_x = 9;
+  int start_x = 0;  // add struct point(x,y)?
+  int start_y = MAZE_Y - 1;
+  int end_x = MAZE_X - 1;
   int end_y = 0;
   if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
     printf("There is no path\n");
@@ -264,12 +260,12 @@ int main() {
   print_map(maze);
   write_to_file(&maze, "../data-samples/test.txt");
 
-  printf("Print labyrinth from file: 2 ways\n\n");
-  Maze maze2 = {0};
-  read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
-  get_map(&maze2);
-  print_map(maze2);
-  draw(&maze2);
+  // printf("Print labyrinth from file: 2 ways\n\n");
+  // Maze maze2 = {0};
+  // read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
+  // get_map(&maze2);
+  // print_map(maze2);
+  // draw(&maze2);
 
   return 0;
 }
