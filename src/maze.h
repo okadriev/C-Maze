@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAZE_X 15  // delete me
-#define MAZE_Y 7  // delete me
+#define MAZE_X 15
+#define MAZE_Y 7
 
 typedef struct Maze_struct {
   int vertical[51][51];
@@ -16,6 +16,11 @@ typedef struct Maze_struct {
   int y;
 } Maze;
 
+void menu();
+void print_menu();
+int get_variant(int count);
+
+void write_to_file(const Maze* test, char* filename);
 void read_from_file(Maze* test, char* filename);
 
 void draw(Maze* test);  // ToDo удалить

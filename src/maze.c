@@ -1,5 +1,54 @@
 #include "maze.h"
 
+void menu() {
+  print_menu();
+  int variant = 0;
+  Maze maze2 = {0};
+  while ((variant = get_variant(4)) != 4) {
+    switch (variant) {
+      case 1:
+        read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
+        printf("\nPrint generate labyrinth:\n\n");
+        get_map(&maze2);
+        print_map(maze2);
+        break;
+      case 2:
+        generate_maze(&maze2);
+        printf("\nPrint generate labyrinth:\n\n");
+        write_to_file(&maze2, "../data-samples/test.txt");
+        get_map(&maze2);
+        print_map(maze2);
+        break;
+
+      case 3:
+        // generate_cave();
+        break;
+    }
+    //    printf("TEST\n");
+  }
+};
+void print_menu() {
+  system("cls");  // ToDo МБ заменить консольным сочетанием ?
+  printf("What do you want to do?\n");
+  printf("1. Load maze from file\n");
+  printf("2. Generate a maze\n");
+  printf("3. Generate cave\n");
+  printf("4. Exit\n");
+  printf("> ");
+}
+
+int get_variant(int count) {
+  int variant;
+  char s[256];
+  scanf("%s", s);
+  while (sscanf(s, "%d", &variant) != 1 || variant < 1 || variant > count) {
+    printf("Incorrect input. Try again: ");  // выводим сообщение об ошибке
+    scanf("%s", s);  // считываем строку повторно
+  }
+
+  return variant;
+}
+
 void write_to_file(const Maze* test, char* filename) {
   FILE* file = fopen(filename, "wt");
   if (file != NULL) {
@@ -192,15 +241,14 @@ void group_swap(int group[][MAZE_X + 1], int target, int swap, int line) {
 }
 
 int main() {
+  menu();
   srand(time(NULL));
   Maze maze = {0};
-  generate_maze(&maze);
-  printf("\nPrint generate labyrinth:\n\n");
-  get_map(&maze);
-  print_map(maze);
-
+  
+  // ToDo вынести отрисовку в подпункты 1 и 2
   printf("Print labyrinth with path:\n\n");
   int start_x = 0;  // add struct point(x,y)?
+  // ToDo Добавить инициализацию новой/существующей структуры
   int start_y = MAZE_Y - 1;
   int end_x = MAZE_X - 1;
   int end_y = 0;
@@ -279,30 +327,4 @@ void generate_maze(Maze* maze) {
   for (int i = 0; i < MAZE_Y; i++) {
     maze->vertical[i][MAZE_X - 1] = 1;
   }
-
-  printf("\nPrint generate labyrinth:\n\n");
-  get_map(&maze);
-  print_map(maze);
-
-  printf("Print labyrinth with path:\n\n");
-  int start_x = 0;  // add struct point(x,y)?
-  int start_y = MAZE_Y - 1;
-  int end_x = MAZE_X - 1;
-  int end_y = 0;
-  if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
-    printf("There is no path\n");
-    maze.map[start_y][start_x] = 2;
-    maze.map[end_y][end_x] = 2;
-  }
-  print_map(maze);
-  write_to_file(&maze, "../data-samples/test.txt");
-
-  // printf("Print labyrinth from file: 2 ways\n\n");
-  // Maze maze2 = {0};
-  // read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
-  // get_map(&maze2);
-  // print_map(maze2);
-  // draw(&maze2);
-
-  return 0;
 }
