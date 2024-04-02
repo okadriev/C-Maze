@@ -124,7 +124,11 @@ void print_map(Maze maze) {
   for (int i = 0; i < maze.y * 2 + 1; i++) {
     for (int j = 0; j < maze.x * 2 + 1; j++) {
       int pixel = maze.map[i][j];
-      printf((pixel == 2) ? "<>" : ((pixel == 1) ? "##" : "  "));
+      if (pixel == 2) {
+        printf("\033[43m  \033[0m");
+      } else {
+        printf((pixel == 1) ? "\033[47m  \033[0m" : "  ");
+      }
     }
     printf("\n");
   }
@@ -142,6 +146,7 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
     if (maze->map[y][x + 1] == 0 && maze->map[y][x + 2] == 0) {
       if (find_path(maze, y_1, x_1 + 1, y_2, x_2)) {
         maze->map[y][x] = 2;
+        maze->map[y][x + 1] = 2;
         get_path = 1;
       }
     }
@@ -149,6 +154,7 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
     if (maze->map[y + 1][x] == 0 && maze->map[y + 2][x] == 0) {
       if (find_path(maze, y_1 + 1, x_1, y_2, x_2)) {
         maze->map[y][x] = 2;
+        maze->map[y + 1][x] = 2;
         get_path = 1;
       }
     }
@@ -156,6 +162,7 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
     if (maze->map[y][x - 1] == 0 && maze->map[y][x - 2] == 0) {
       if (find_path(maze, y_1, x_1 - 1, y_2, x_2)) {
         maze->map[y][x] = 2;
+        maze->map[y][x - 1] = 2;
         get_path = 1;
       }
     }
@@ -163,6 +170,7 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
     if (maze->map[y - 1][x] == 0 && maze->map[y - 2][x] == 0) {
       if (find_path(maze, y_1 - 1, x_1, y_2, x_2)) {
         maze->map[y][x] = 2;
+        maze->map[y - 1][x] = 2;
         get_path = 1;
       }
     }
