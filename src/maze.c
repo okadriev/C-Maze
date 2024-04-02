@@ -194,8 +194,37 @@ void group_swap(int group[][MAZE_X + 1], int target, int swap, int line) {
 int main() {
   srand(time(NULL));
   Maze maze = {0};
-  maze.y = MAZE_Y;
-  maze.x = MAZE_X;
+  generate_maze(&maze);
+  printf("\nPrint generate labyrinth:\n\n");
+  get_map(&maze);
+  print_map(maze);
+
+  printf("Print labyrinth with path:\n\n");
+  int start_x = 0;  // add struct point(x,y)?
+  int start_y = MAZE_Y - 1;
+  int end_x = MAZE_X - 1;
+  int end_y = 0;
+  if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
+    printf("There is no path\n");
+    maze.map[start_y][start_x] = 2;
+    maze.map[end_y][end_x] = 2;
+  }
+  print_map(maze);
+  write_to_file(&maze, "../data-samples/test.txt");
+
+  // printf("Print labyrinth from file: 2 ways\n\n");
+  // Maze maze2 = {0};
+  // read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
+  // get_map(&maze2);
+  // print_map(maze2);
+  // draw(&maze2);
+
+  return 0;
+}
+
+void generate_maze(Maze* maze) {
+  maze->y = MAZE_Y;
+  maze->x = MAZE_X;
   int group[MAZE_Y + 1][MAZE_X + 1] = {0};
   int group_count = 1;
 
@@ -206,7 +235,7 @@ int main() {
 
     for (int x = 0; x < MAZE_X - 1; x++) {
       if (group[y][x] == group[y][x + 1] || rand() & 1) {
-        maze.vertical[y][x] = 1;
+        maze->vertical[y][x] = 1;
 
       } else {
         group_swap(group, group[y][x], group[y][x + 1], y);
@@ -216,19 +245,19 @@ int main() {
     for (int x = 0; x < MAZE_X; x++) {
       int count = 0;
       for (int i = 0; i < MAZE_X; i++) {
-        if (group[y][i] == group[y][x] && !maze.horizontal[y][i]) {
+        if (group[y][i] == group[y][x] && !maze->horizontal[y][i]) {
           count++;
         }
       }
 
       if (count > 1 && rand() & 1) {
-        maze.horizontal[y][x] = 1;
+        maze->horizontal[y][x] = 1;
       }
     }
 
     if (y < MAZE_Y - 1) {
       for (int x = 0; x < MAZE_X; x++) {
-        if (maze.horizontal[y][x] == 0) {
+        if (maze->horizontal[y][x] == 0) {
           group[y + 1][x] = group[y][x];
         }
       }
@@ -236,7 +265,7 @@ int main() {
     } else {
       for (int x = 0; x < MAZE_X - 1; x++) {
         if (group[y][x] != group[y][x + 1]) {
-          maze.vertical[y][x] = 0;
+          maze->vertical[y][x] = 0;
           group_swap(group, group[y][x], group[y][x + 1], y);
         }
       }
@@ -244,11 +273,11 @@ int main() {
   }
 
   for (int i = 0; i < MAZE_X; i++) {
-    maze.horizontal[MAZE_Y - 1][i] = 1;
+    maze->horizontal[MAZE_Y - 1][i] = 1;
   }
 
   for (int i = 0; i < MAZE_Y; i++) {
-    maze.vertical[i][MAZE_X - 1] = 1;
+    maze->vertical[i][MAZE_X - 1] = 1;
   }
 
   printf("\nPrint generate labyrinth:\n\n");

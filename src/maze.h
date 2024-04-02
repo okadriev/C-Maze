@@ -17,8 +17,10 @@ typedef struct Maze_struct {
 } Maze;
 
 void read_from_file(Maze* test, char* filename);
-void draw(Maze* test);
-void get_map(Maze* test);
+
+void draw(Maze* test);  // ToDo удалить
+void generate_maze(Maze* maze);
+void get_map(Maze* maze);
 void print_map(Maze maze);
 int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2);
 void group_swap(int group[][MAZE_X + 1], int target, int swap, int line);
