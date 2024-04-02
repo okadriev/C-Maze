@@ -136,3 +136,5 @@ dkms.conf
 /CMakeFiles/
 /.idea/
 /.cmake/
+
+data-samples/test.txt
