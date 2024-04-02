@@ -55,10 +55,10 @@ void life_grot(Grot* grot) {
 int count_life(Grot* grot, int i, int j) {
   int cnt_life = 0;
 
-  for (int k = j - 1; k <= j + 1; k++) {
-    if (i > 0 && grot->grotto[i - 1][k]) cnt_life;
+  for (int k = (j > 0 ? j - 1 : j); k <= j + 1; k++) {
+    if (i > 0 && grot->grotto[i - 1][k]) cnt_life++;
     if (k != j && grot->grotto[i][k]) cnt_life++;
-    if (i < MAZE_Y - 1 && grot->grotto[i + 1][k]) cnt_life;
+    if (i < MAZE_Y - 2 && grot->grotto[i + 1][k]) cnt_life++;
   }
 
   return cnt_life;
@@ -100,22 +100,22 @@ int choose_mode(int* n) {
   }
 
   if (mode == 2) {
-    while (n <= 0) {
+    while (*n <= 0) {
       printf("Enter the rendering time for each iteration in milliseconds:\n");
       scanf("%d", n);
 
-      if (n <= 0) printf("Incorrect input\n");
+      if (*n <= 0) printf("Incorrect input\n");
     }
   }
+
+  return mode;
 }
 
 void print_step_by_step(Grot* grot) {
   int iteration = 1;
   while (iteration == 1) {
-    while (!compare(grot->grotto)) {
-      life_grot(grot);
-      print_grot(grot);
-    }
+    print_grot(grot);
+    life_grot(grot);
 
     printf("To continue enter 1 or another number to exit:\n");
     scanf("%d", &iteration);
@@ -124,8 +124,8 @@ void print_step_by_step(Grot* grot) {
 
 void print_auto(Grot* grot, int n) {
   while (!compare(grot->grotto)) {
-    life_grot(grot);
     print_grot(grot);
+    life_grot(grot);
     sleep(n / 1000);
   }
 }
@@ -135,6 +135,7 @@ void print_grot(Grot* grot) {
     for (int j = 0; j < MAZE_X; j++) {
       printf(grot->grotto[i][j] ? "\033[47m  \033[0m" : "  ");
     }
+    printf("\n");
   }
 }
 
