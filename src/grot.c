@@ -1,75 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <unistd.h>
-
-#define MAZE_X 50
-#define MAZE_Y 50
-#define MIN_LIMIT 0
-#define MAX_LIMIT 7
-
-typedef struct Grot_struct {
-  int grotto[MAZE_Y][MAZE_X];
-  int berth;
-  int death;
-  int chance[2];
-} Grot;
-
-void grot();
-void generate_grot(Grot* grot);
-void life_grot(Grot* grot);
-int count_life(Grot* grot, int i, int j);
-void user_input(Grot* grot);
-int choose_mode(int* n);
-void print_step_by_step(Grot* grot);
-void print_auto(Grot* grot, int n);
-void print_grot(Grot* grot);
-int compare(int grotto[MAZE_Y][MAZE_X]);
-
-void generate_grot(Grot* grot) {
-  srand(time(NULL));
-
-  for (int i = 0; i < MAZE_Y; i++) {
-    for (int j = 0; j < MAZE_X; j++) {
-      grot->grotto[i][j] = rand() & 1;
-      if (i == grot->chance[0] && j == grot->chance[1]) {
-        grot->grotto[i][j] = 1;
-      }
-    }
-  }
-}
-
-void life_grot(Grot* grot) {
-  int cnt_life = 0;
-
-  for (int i = 0; i < MAZE_Y; i++) {
-    for (int j = 0; j < MAZE_X; j++) {
-      cnt_life = count_life(grot, i, j);
-
-      if (grot->grotto[i][j] && cnt_life < grot->death) grot->grotto[i][j] = 0;
-      if (!grot->grotto[i][j] && cnt_life > grot->berth) grot->grotto[i][j] = 1;
-    }
-  }
-}
-
-int count_life(Grot* grot, int i, int j) {
-  int cnt_life = 0;
-
-  for (int k = (j > 0 ? j - 1 : j); k <= j + 1; k++) {
-    if (i > 0 && grot->grotto[i - 1][k]) cnt_life++;
-    if (k != j && grot->grotto[i][k]) cnt_life++;
-    if (i < MAZE_Y - 2 && grot->grotto[i + 1][k]) cnt_life++;
-  }
-
-  return cnt_life;
-}
+#include "grot.h"
 
 void user_input(Grot* grot) {
-  while (grot->berth < MIN_LIMIT || grot->berth > MAX_LIMIT) {
+  while (grot->birth < MIN_LIMIT || grot->birth > MAX_LIMIT) {
     printf("Enter the limit of life (0-7): \n");
-    scanf("%d", &grot->berth);
+    scanf("%d", &grot->birth);
 
-    if (grot->berth < MIN_LIMIT || grot->berth > MAX_LIMIT)
+    if (grot->birth < MIN_LIMIT || grot->birth > MAX_LIMIT)
       printf("Incorrect input\n");
   }
 
@@ -81,11 +17,13 @@ void user_input(Grot* grot) {
       printf("Incorrect input\n");
   }
 
-  printf("Enter the chance of grotto (0-49): \n");
-  printf("Enter the x coordinate: \n");
-  scanf("%d", &grot->chance[1]);
-  printf("Enter the y coordinate: \n");
-  scanf("%d", &grot->chance[0]);
+  while (grot->chance < MIN_CHANCE || grot->chance > MAX_CHANCE) {
+    printf("Enter the chance of life (1-10): \n");
+    scanf("%d", &grot->chance);
+
+    if (grot->chance < MIN_CHANCE || grot->chance > MAX_CHANCE)
+      printf("Incorrect input\n");
+  }
 }
 
 int choose_mode(int* n) {
@@ -101,7 +39,7 @@ int choose_mode(int* n) {
 
   if (mode == 2) {
     while (*n <= 0) {
-      printf("Enter the rendering time for each iteration in milliseconds:\n");
+      printf("Enter the rendering time for each iteration in seconds:\n");
       scanf("%d", n);
 
       if (*n <= 0) printf("Incorrect input\n");
@@ -110,6 +48,7 @@ int choose_mode(int* n) {
 
   return mode;
 }
+
 
 void print_step_by_step(Grot* grot) {
   int iteration = 1;
@@ -126,7 +65,7 @@ void print_auto(Grot* grot, int n) {
   while (!compare(grot->grotto)) {
     print_grot(grot);
     life_grot(grot);
-    sleep(n / 1000);
+    sleep(n);
   }
 }
 
@@ -138,25 +77,11 @@ void print_grot(Grot* grot) {
     printf("\n");
   }
 }
-
-int compare(int grotto[MAZE_Y][MAZE_X]) {
-  int res = 1;
-  static int temp[MAZE_Y][MAZE_X] = {0};
-
-  for (int i = 0; i < MAZE_Y && res; i++)
-    for (int j = 0; j < MAZE_X && res; j++)
-      if (grotto[i][j] != temp[i][j]) res = 0;
-
-  for (int i = 0; i < MAZE_Y; i++)
-    for (int j = 0; j < MAZE_X; j++) temp[i][j] = grotto[i][j];
-
-  return res;
-}
-
 void grot() {
   Grot grot = {0};
-  grot.berth = -1;
+  grot.birth = -1;
   grot.death = -1;
+  grot.chance = -1;
 
   user_input(&grot);
   generate_grot(&grot);
