@@ -4,10 +4,13 @@
 
 int main() {
   menu();
-  srand(time(NULL));
   return 0;
 }
 
+/**
+ * Инициализация лабиринта
+ * @param maze указатель на структуру лабиринта
+ */
 void clear_maze(Maze* maze) {
   for (int i = 0; i < MAX_MAP; i++) {
     for (int j = 0; j < MAX_MAP; j++) {
@@ -22,6 +25,9 @@ void clear_maze(Maze* maze) {
   maze->y = 0;
 }
 
+/**
+ * Основной цикл программы с выводом меню
+ */
 void menu() {
   print_main_menu();
   int state = 0;
@@ -81,8 +87,11 @@ void menu() {
   }
 };
 
+/**
+ * Печать main menu
+ */
 void print_main_menu() {
-  printf("\033[2J");
+  CLS;
   printf("What do you want to do?\n");
   printf("1. Load maze from file\n");
   printf("2. Generate a maze\n");
@@ -91,27 +100,38 @@ void print_main_menu() {
   printf("> ");
 }
 
+/**
+ * Считываение из консоли ввода пользователя
+ * @param count кол-во пунктов меню
+ * @return введенное значение
+ */
 int get_variant(int count) {
-  int variant;
+  int user_choice;
   char s[256];
   scanf("%s", s);
-  while (sscanf(s, "%d", &variant) != 1 || variant < 1 || variant > count) {
-    printf("Incorrect input. Try again: ");  // выводим сообщение об ошибке
-    scanf("%s", s);  // считываем строку повторно
+  while (sscanf(s, "%d", &user_choice) != 1 || user_choice < 1 ||
+         user_choice > count) {
+    printf("Incorrect input. Try again: ");
+    scanf("%s", s);
   }
-  return variant;
+  return user_choice;
 }
 
-void write_to_file(const Maze* test, char* filename) {
+/**
+ * Запись лабиринта в файл
+ * @param maze указатель на структуру лабиринта
+ * @param filename имя файла
+ */
+void write_to_file(const Maze* maze, char* filename) {
   // ToDo Откуда узнать размерность лабиринта для записи в файл ? Текущая
   // реализация некорректна
   FILE* file = fopen(filename, "wt");
   if (file != NULL) {
-    fprintf(file, "%d %d\n", test->y, test->x);
-    for (int i = 0; i < test->y; i++) {
-      for (int j = 0; j < test->x; j++) {
-        putc(test->vertical[i][j] + 48, file);
-        if (j != test->x - 1) {
+    fprintf(file, "%d %d\n", maze->y, maze->x);
+    for (int i = 0; i < maze->y; i++) {
+      for (int j = 0; j < maze->x; j++) {
+        putc(maze->vertical[i][j] + 48, file);
+        if (j != maze->x - 1) {
           putc(' ', file);  // ToDo по условию}
         }
       }
@@ -119,14 +139,14 @@ void write_to_file(const Maze* test, char* filename) {
     }
     putc('\n', file);
     // ToDo Устранить дублирование кода
-    for (int i = 0; i < test->y; i++) {
-      for (int j = 0; j < test->x; j++) {
-        putc(test->horizontal[i][j] + 48, file);
-        if (j != test->x - 1) {
+    for (int i = 0; i < maze->y; i++) {
+      for (int j = 0; j < maze->x; j++) {
+        putc(maze->horizontal[i][j] + 48, file);
+        if (j != maze->x - 1) {
           putc(' ', file);  // ToDo по условию}
         }
       }
-      if (i != test->y - 1) {
+      if (i != maze->y - 1) {
         putc('\n', file);
       }
     }
@@ -134,7 +154,12 @@ void write_to_file(const Maze* test, char* filename) {
   }
 }
 
-void read_from_file(Maze* test, char* filename) {
+/**
+ * Чтение лабиринта из файла
+ * @param maze указатель на структуру лабиринта
+ * @param filename имя файла
+ */
+void read_from_file(Maze* maze, char* filename) {
   // ToDo Возвращать ошибку в случае сбоя
   FILE* file = fopen(filename, "rt");
   if (file != NULL) {
@@ -144,13 +169,13 @@ void read_from_file(Maze* test, char* filename) {
     int i = 0;
     int j = 0;
     // ToDo Обработать ошибку scanf
-    fscanf(file, "%d%d\n", &test->y, &test->x);
+    fscanf(file, "%d%d\n", &maze->y, &maze->x);
     while ((cur = fgetc(file)) != EOF) {
       if (cur == '1' || cur == '0') {
         if (flag) {
-          test->vertical[i][j] = cur - 48;
+          maze->vertical[i][j] = cur - 48;
         } else {
-          test->horizontal[i][j] = cur - 48;
+          maze->horizontal[i][j] = cur - 48;
         }
         j++;
       } else if (cur == '\n' && last == '\n') {
@@ -167,6 +192,10 @@ void read_from_file(Maze* test, char* filename) {
   }
 }
 
+/**
+ * Формирование матрицы лабиринта для печати
+ * @param maze указатель на структуру лабиринта
+ */
 void get_map(Maze* maze) {
   for (int i = 0; i < maze->x * 2 + 1; i++) {
     maze->map[0][i] = 1;
@@ -185,6 +214,10 @@ void get_map(Maze* maze) {
   }
 }
 
+/**
+ * Печать лабиринта
+ * @param maze указатель на структуру лабиринта
+ */
 void print_map(Maze maze) {
   for (int i = 0; i < maze.y * 2 + 1; i++) {
     for (int j = 0; j < maze.x * 2 + 1; j++) {
@@ -200,6 +233,15 @@ void print_map(Maze maze) {
   printf("\n");
 }
 
+/**
+ * Поиск пути в лабиринте от начальной и до конечной точки
+ * @param maze указатель на структуру лабиринта
+ * @param y_1 y-координата начальной точки
+ * @param x_1 x-координата начальной точки
+ * @param y_2 y-координата конечной точки
+ * @param x_2 x-координата конечной точки
+ * @return
+ */
 int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
   int get_path = 0;
   int x = x_1 * 2 + 1;
@@ -250,7 +292,12 @@ void group_swap(int group[][MAZE_X + 1], int target, int swap, int line) {
   }
 }
 
+/**
+ * Генерация идеального лабиринта
+ * @param maze указатель на структуру лабиринта
+ */
 void generate_maze(Maze* maze) {
+  srand(time(NULL));  // ToDo запускать один раз в main ?
   maze->y = MAZE_Y;
   maze->x = MAZE_X;
   int group[MAZE_Y + 1][MAZE_X + 1] = {0};

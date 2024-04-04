@@ -1,5 +1,9 @@
 #include "grot.h"
 
+/**
+ * Генерация пещеры
+ * @param grot указатель на структуру пещеры
+ */
 void generate_grot(Grot* grot) {
   srand(time(NULL));
 
@@ -8,6 +12,10 @@ void generate_grot(Grot* grot) {
       grot->grotto[i][j] = ((rand() % 10) > grot->chance) ? 1 : 0;
 }
 
+/**
+ * ToDo добавить описание
+ * @param grot указатель на структуру пещеры
+ */
 void life_grot(Grot* grot) {
   int cnt_life = 0;
 
@@ -21,6 +29,13 @@ void life_grot(Grot* grot) {
   }
 }
 
+/**
+ * ToDo добавить описание
+ * @param grot
+ * @param i
+ * @param j
+ * @return
+ */
 int count_life(Grot* grot, int i, int j) {
   int cnt_life = 0;
 
@@ -38,6 +53,11 @@ int count_life(Grot* grot, int i, int j) {
   return cnt_life;
 }
 
+/**
+ * ToDo добавить описание
+ * @param grotto
+ * @return
+ */
 int compare(int grotto[G_MAZE_Y][G_MAZE_X]) {
   int res = 1;
   static int temp[G_MAZE_Y][G_MAZE_X] = {0};

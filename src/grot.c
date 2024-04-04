@@ -2,6 +2,10 @@
 
 // ToDo добавить fopen для чтения из файла
 
+/**
+ * Считываение из консоли начальных данных для генерации пещеры
+ * @param grot указатель на структуру пещеры
+ */
 void user_input(Grot* grot) {
   while (grot->birth < MIN_LIMIT || grot->birth > MAX_LIMIT) {
     printf("Enter the limit of life (0-7): \n");
@@ -26,6 +30,11 @@ void user_input(Grot* grot) {
   }
 }
 
+/**
+ * Считываение из консоли ввода пользователя режима отображения пещеры
+ * @param n задержка в секундах
+ * @return Режим печати: 1 - StepByStep, 2 - Auto
+ */
 int choose_mode(int* n) {
   int mode = 0;
   while (mode < 1 || mode > 2) {
@@ -50,7 +59,13 @@ int choose_mode(int* n) {
   return mode;
 }
 
+/**
+ * Пошаговая печать пещеры
+ * @param grot указатель на структуру пещеры
+ */
 void print_step_by_step(Grot* grot) {
+  // ToDo Возможно необходимо чистить экран перед очередным выводом ?
+  // Есть дефайн CLS
   int iteration = 1;
   while (iteration == 1) {
     print_grot(grot);
@@ -60,6 +75,11 @@ void print_step_by_step(Grot* grot) {
   }
 }
 
+/**
+ * Автоматическая печать пещеры с интервалом
+ * @param grot указатель на структуру пещеры
+ * @param n интервал обновления
+ */
 void print_auto(Grot* grot, int n) {
   while (!compare(grot->grotto)) {
     print_grot(grot);
@@ -68,6 +88,10 @@ void print_auto(Grot* grot, int n) {
   }
 }
 
+/**
+ * Печать пещеры
+ * @param grot указатель на структуру пещеры
+ */
 void print_grot(Grot* grot) {
   for (int i = 0; i < G_MAZE_Y; i++) {
     for (int j = 0; j < G_MAZE_X; j++) {
@@ -76,6 +100,10 @@ void print_grot(Grot* grot) {
     printf("\n");
   }
 }
+
+/**
+ * Точка входа в библотеку
+ */
 void grot() {
   Grot grot = {0};
   grot.birth = -1;

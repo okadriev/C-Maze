@@ -9,6 +9,7 @@
 #define MAZE_Y 7
 #define MAX_MAZE 51
 #define MAX_MAP 101
+#define CLS printf("\033[2J")
 
 // ToDo Удалить ?
 // typedef struct Point {
@@ -30,8 +31,8 @@ void menu();
 void print_main_menu();
 int get_variant(int count);
 
-void write_to_file(const Maze* test, char* filename);
-void read_from_file(Maze* test, char* filename);
+void write_to_file(const Maze* maze, char* filename);
+void read_from_file(Maze* maze, char* filename);
 
 void clear_maze(Maze* maze);
 void generate_maze(Maze* maze);
