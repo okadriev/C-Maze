@@ -86,12 +86,11 @@ void read_grot(Grot* grot, char* file_name) {
     printf("File not found\n");
 
   else {
-    int rows, cols;
-    fscanf(file, "%d%d\n", &rows, &cols);
+    fscanf(file, "%d%d\n", &grot->row, &grot->col);
 
     for (int i = 0; i < GROT_Y; i++)
       for (int j = 0; j < GROT_X; j++)
-        if (i < rows && j < cols)
+        if (i < grot->row && j < grot->col)
           fscanf(file, "%d", &grot->grotto[i][j]);
         else
           grot->grotto[i][j] = 1;

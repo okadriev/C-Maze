@@ -3,42 +3,38 @@
 void generate_grot(Grot* grot) {
   srand(time(NULL));
 
-  for (int i = 0; i < GROT_Y; i++)
-    for (int j = 0; j < GROT_X; j++)
+  for (int i = 0; i < grot->row; i++)
+    for (int j = 0; j < grot->col; j++)
       grot->grotto[i][j] = ((rand() % 10) > grot->chance) ? 1 : 0;
 }
 
 void life_grot(Grot* grot) {
-  int cnt_life = 0;
+  int cnt_life[GROT_Y][GROT_X] = {0};
 
-  for (int i = 0; i < GROT_Y; i++) {
-    for (int j = 0; j < GROT_X; j++) {
-      cnt_life = count_life(grot, i, j);
+  for (int i = 0; i < grot->row; i++)
+    for (int j = 0; j < grot->col; j++) cnt_life[i][j] = count_life(grot, i, j);
 
-      if (grot->grotto[i][j] && cnt_life < grot->death)
+  for (int i = 0; i < grot->row; i++)
+    for (int j = 0; j < grot->col; j++) {
+      if (grot->grotto[i][j] && cnt_life[i][j] < grot->death)
         grot->grotto[i][j] = 0;
-      else if (!grot->grotto[i][j] && cnt_life > grot->birth)
+      else if (!grot->grotto[i][j] && cnt_life[i][j] > grot->birth)
         grot->grotto[i][j] = 1;
     }
-  }
 }
 
 int count_life(Grot* grot, int i, int j) {
   int cnt_life = 0;
 
-  for (int k = j - 1; k <= j + 1; k++) {
-    int rule = (k >= 0 && k <= GROT_X - 1);
-
-    if (!i) cnt_life++;
-    if (!j) cnt_life++;
-    if (i == GROT_Y - 1) cnt_life++;
-    if (j == GROT_X - 1) cnt_life++;
-
-    if (i > 0 && rule && grot->grotto[i - 1][k]) cnt_life++;
-    if (k != j && rule && grot->grotto[i][k]) cnt_life++;
-    if (i < GROT_Y - 2 && rule && grot->grotto[i + 1][k]) cnt_life++;
-  }
-
+  for (int y = i - 1; y <= i + 1; y++)
+    for (int x = j - 1; x <= j + 1; x++) {
+      if (y < 0 || x < 0 || y >= grot->row || x >= grot->col)
+        cnt_life++;
+      else if (y == i && x == j)
+        continue;
+      else if (grot->grotto[y][x])
+        cnt_life++;
+    }
   return cnt_life;
 }
 
