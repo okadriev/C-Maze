@@ -226,11 +226,7 @@ void print_map(Maze maze) {
   printf("\n");
 
   for (int y = 0; y < maze.y * 2 + 1; y++) {
-    if (y != 0 && y != maze.y * 2 && (y & 1)) {
-      printf("%2d ", (y - 1) / 2);
-    } else {
-      printf("   ");
-    }
+    printf((y & 1) ? "%2d " : "   ", (y - 1) / 2);
 
     for (int x = 0; x < maze.x * 2 + 1; x++) {
       int pixel = maze.map[y][x];
