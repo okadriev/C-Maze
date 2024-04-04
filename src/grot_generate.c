@@ -24,7 +24,8 @@ void life_grot(Grot* grot) {
 int count_life(Grot* grot, int i, int j) {
   int cnt_life = 0;
 
-  for (int k = (j > 0 ? j - 1 : j); k <= j + 1; k++) {
+  for (int k = (j > 0 ? j - 1 : j); k <= (j + 1 > G_MAZE_X - 1 ? j : j + 1);
+       k++) {
     if (!i) cnt_life++;
     if (!j) cnt_life++;
     if (i == G_MAZE_Y - 1) cnt_life++;
