@@ -26,13 +26,13 @@ START_TEST(life_grot_1) {
   grot.birth = 4;
   grot.death = 2;
   Grot check = {0};
-  for (int i = 0; i < MAZE_Y; i++)
-    for (int j = 0; j < MAZE_X; j++) check.grotto[i][j] = grot.grotto[i][j];
+  for (int i = 0; i < GROT_Y; i++)
+    for (int j = 0; j < GROT_X; j++) check.grotto[i][j] = grot.grotto[i][j];
 
   life_grot(&grot);
 
-  for (int i = 0; i < MAZE_Y; i++)
-    for (int j = 0; j < MAZE_X; j++)
+  for (int i = 0; i < GROT_Y; i++)
+    for (int j = 0; j < GROT_X; j++)
       ck_assert(check.grotto[i][j] == grot.grotto[i][j]);
 }
 END_TEST
