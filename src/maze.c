@@ -1,34 +1,91 @@
 #include "maze.h"
 
+#include "grot.h"
+
+int main() {
+  menu();
+  srand(time(NULL));
+  return 0;
+}
+
+void clear_maze(Maze* maze) {
+  // ToDo задефайнить цифры
+  for (int i = 0; i < 101; i++) {
+    for (int j = 0; j < 101; j++) {
+      if (i < 51 && j < 51) {
+        maze->vertical[i][j] = 0;
+        maze->horizontal[i][j] = 0;
+      }
+      maze->map[i][j] = 0;
+    }
+  }
+  maze->x = 0;
+  maze->y = 0;
+}
+
 void menu() {
-  print_menu();
-  int variant = 0;
-  Maze maze2 = {0};
-  while ((variant = get_variant(4)) != 4) {
-    switch (variant) {
+  print_main_menu();
+  int state = 0;
+  int user_choice;
+  Maze maze = {0};
+  // ToDo Добавить инициализацию новой/существующей структуры
+  int start_x = 0;  // add struct point(x,y)?
+  int start_y = MAZE_Y - 1;
+  int end_x = MAZE_X - 1;
+  int end_y = 0;
+  while ((user_choice = get_variant(4)) != 4) {
+    state = state * 10 + user_choice;
+    switch (state) {
       case 1:
-        read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
-        printf("\nPrint generate labyrinth:\n\n");
-        get_map(&maze2);
-        print_map(maze2);
+        clear_maze(&maze);
+        // ToDo Возможность указания произвольного файла, либо выбора из
+        // преддефайнов ?
+        read_from_file(&maze, "../data-samples/example_of_maze_1.txt");
+        printf("\nPrint labyrinth from file:\n\n");
+        get_map(&maze);
+        print_map(maze);
         break;
       case 2:
-        generate_maze(&maze2);
+        clear_maze(&maze);
+        generate_maze(&maze);
         printf("\nPrint generate labyrinth:\n\n");
-        write_to_file(&maze2, "../data-samples/test.txt");
-        get_map(&maze2);
-        print_map(maze2);
+        write_to_file(&maze, "../data-samples/test.txt");
+        get_map(&maze);
+        print_map(maze);
         break;
-
       case 3:
-        // generate_cave();
+        grot();
         break;
+      case 11:
+        // ToDo вынести отрисовку в подпункты 1 и 2
+        // ToDo Задать начальные и конечные точки
+        if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
+          printf("There is no path\n");
+          maze.map[start_y][start_x] = 2;
+          maze.map[end_y][end_x] = 2;
+        } else {
+          print_map(maze);
+        }
+        break;
+      case 21:
+        // ToDo Удалить дублирование
+        //        printf("TESTETSETSETSE ---------------\n");
+        if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
+          printf("There is no path\n");
+          maze.map[start_y][start_x] = 2;
+          maze.map[end_y][end_x] = 2;
+        }
+        print_map(maze);
+        break;
+      default:
+        state = 0;
+        print_main_menu();
     }
-    //    printf("TEST\n");
   }
 };
-void print_menu() {
-  system("cls");  // ToDo МБ заменить консольным сочетанием ?
+
+void print_main_menu() {
+  printf("\033[2J");  // ToDo МБ заменить консольным сочетанием ?
   printf("What do you want to do?\n");
   printf("1. Load maze from file\n");
   printf("2. Generate a maze\n");
@@ -45,7 +102,6 @@ int get_variant(int count) {
     printf("Incorrect input. Try again: ");  // выводим сообщение об ошибке
     scanf("%s", s);  // считываем строку повторно
   }
-
   return variant;
 }
 
@@ -112,52 +168,13 @@ void read_from_file(Maze* test, char* filename) {
   }
 }
 
-void draw(Maze* test) {
-  for (int i = 0; i < 4 * MAZE_X + 1; i++) {
-    printf("#");
-  }
-  printf("\n");
-  for (int i = 0; i < 2 * MAZE_Y; i++) {
-    printf("#");
-    for (int j = 0; j < 2 * MAZE_X; j++) {
-      if (!(i & 1)) {
-        if (test->vertical[i / 2][j / 2]) {
-          if (!(j & 1)) {
-            printf("  ");
-          } else {
-            printf(" #");
-          }
-
-        } else {
-          printf("  ");
-        }
-      } else {
-        if (test->horizontal[i / 2][j / 2]) {
-          printf("##");
-        } else {
-          if ((j & 1) && test->vertical[i / 2][j / 2]) {
-            printf(" #");
-          } else if (test->horizontal[1 + i / 2][j / 2] && (j & 1)) {
-            printf(" #");
-          } else {
-            printf("  ");
-          }
-        }
-      }
-    }
-    printf("\n");
-  }
-}
-
 void get_map(Maze* maze) {
   for (int i = 0; i < maze->x * 2 + 1; i++) {
     maze->map[0][i] = 1;
   }
-
   for (int i = 0; i < maze->y * 2 + 1; i++) {
     maze->map[i][0] = 1;
   }
-
   for (int y = maze->y - 1; y >= 0; y--) {
     for (int x = maze->x - 1; x >= 0; x--) {
       maze->map[y * 2 + 2][x * 2 + 2] =
@@ -189,9 +206,8 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
   int x = x_1 * 2 + 1;
   int y = y_1 * 2 + 1;
   maze->map[y][x] = -1;
-
   if (x_1 != x_2 || y_1 != y_2) {
-    // можно немного оптимизировать добавив ( && !get_path) в условие if
+    // ToDo можно немного оптимизировать добавив ( && !get_path) в условие if
     if (maze->map[y][x + 1] == 0 && maze->map[y][x + 2] == 0) {
       if (find_path(maze, y_1, x_1 + 1, y_2, x_2)) {
         maze->map[y][x] = 2;
@@ -199,7 +215,6 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
         get_path = 1;
       }
     }
-
     if (maze->map[y + 1][x] == 0 && maze->map[y + 2][x] == 0) {
       if (find_path(maze, y_1 + 1, x_1, y_2, x_2)) {
         maze->map[y][x] = 2;
@@ -207,7 +222,6 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
         get_path = 1;
       }
     }
-
     if (maze->map[y][x - 1] == 0 && maze->map[y][x - 2] == 0) {
       if (find_path(maze, y_1, x_1 - 1, y_2, x_2)) {
         maze->map[y][x] = 2;
@@ -215,7 +229,6 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
         get_path = 1;
       }
     }
-
     if (maze->map[y - 1][x] == 0 && maze->map[y - 2][x] == 0) {
       if (find_path(maze, y_1 - 1, x_1, y_2, x_2)) {
         maze->map[y][x] = 2;
@@ -223,12 +236,10 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
         get_path = 1;
       }
     }
-
   } else {
     maze->map[y][x] = 2;
     get_path = 1;
   }
-
   return get_path;
 }
 
@@ -238,36 +249,6 @@ void group_swap(int group[][MAZE_X + 1], int target, int swap, int line) {
       group[line][i] = target;
     }
   }
-}
-
-int main() {
-  menu();
-  srand(time(NULL));
-  Maze maze = {0};
-  
-  // ToDo вынести отрисовку в подпункты 1 и 2
-  printf("Print labyrinth with path:\n\n");
-  int start_x = 0;  // add struct point(x,y)?
-  // ToDo Добавить инициализацию новой/существующей структуры
-  int start_y = MAZE_Y - 1;
-  int end_x = MAZE_X - 1;
-  int end_y = 0;
-  if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
-    printf("There is no path\n");
-    maze.map[start_y][start_x] = 2;
-    maze.map[end_y][end_x] = 2;
-  }
-  print_map(maze);
-  write_to_file(&maze, "../data-samples/test.txt");
-
-  // printf("Print labyrinth from file: 2 ways\n\n");
-  // Maze maze2 = {0};
-  // read_from_file(&maze2, "../data-samples/example_of_maze_1.txt");
-  // get_map(&maze2);
-  // print_map(maze2);
-  // draw(&maze2);
-
-  return 0;
 }
 
 void generate_maze(Maze* maze) {

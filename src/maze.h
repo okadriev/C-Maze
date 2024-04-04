@@ -8,22 +8,30 @@
 #define MAZE_X 15
 #define MAZE_Y 7
 
+// ToDo Удалить ?
+// typedef struct Point {
+//  int x;
+//  int y;
+//} Point;
+
 typedef struct Maze_struct {
   int vertical[51][51];
   int horizontal[51][51];
   int map[101][101];
+  //  Point start;  // ToDo Удалить ?
+  //  Point end;    // ToDo Удалить ?
   int x;
   int y;
 } Maze;
 
 void menu();
-void print_menu();
+void print_main_menu();
 int get_variant(int count);
 
 void write_to_file(const Maze* test, char* filename);
 void read_from_file(Maze* test, char* filename);
 
-void draw(Maze* test);  // ToDo удалить
+void clear_maze(Maze* maze);
 void generate_maze(Maze* maze);
 void get_map(Maze* maze);
 void print_map(Maze maze);

@@ -4,8 +4,8 @@ CC=gcc
 FLAGS=-Wall -Wextra -Werror -std=c11
 CFLAGS:=$(FLAGS)
 GCOV:=$(FLAGS) --coverage
-SRC=maze.c #$(wildcard *.c)
-HEADERS=maze.h
+SRC=$(wildcard *.c)
+HEADERS=$(wildcard *.h)
 OBJS=$(patsubst %.c,%.o,$(SRC))
 TEST_SRC=$(wildcard tests/*.c)
 TEST_OBJS=$(patsubst %.c,%.o,$(wildcard tests/*.c))
@@ -23,20 +23,19 @@ uninstall:
 	sudo rm -f /usr/bin/$(NAME)
 
 clean:
-	-rm -rf $(BUILD)*.*
+	-rm -rf $(BUILD)*.* $(BUILD)s21_maze
 
 tests: # ToDo
 	#$(CC) $(CFLAGS) $^ -o test -lcheck -lm -lsubunit -Lbuild -l:XXXXXX.a
 	#-clear
 	#-./test
 
-$(BUILD)$(NAME): $(BUILD)$(OBJS)
+$(BUILD)$(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 	$@
 	make clean
 
-$(BUILD)$(OBJS): $(SRC)
-	$(CC) $(CFLAGS) -c $^ -o $@
+$(OBJS): $(SRC)
 
 # ToDo
 #gcov_report: clean ext1_flag build/s21_tetris.a base_flag build/s21_test_lib.o ext2_flag test
