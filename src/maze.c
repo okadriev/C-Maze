@@ -106,6 +106,8 @@ int get_variant(int count) {
 }
 
 void write_to_file(const Maze* test, char* filename) {
+  // ToDo Откуда узнать размерность лабиринта для записи в файл ? Текущая
+  // реализация некорректна
   FILE* file = fopen(filename, "wt");
   if (file != NULL) {
     fprintf(file, "%d %d\n", test->y, test->x);
