@@ -9,10 +9,9 @@ int main() {
 }
 
 void clear_maze(Maze* maze) {
-  // ToDo задефайнить цифры
-  for (int i = 0; i < 101; i++) {
-    for (int j = 0; j < 101; j++) {
-      if (i < 51 && j < 51) {
+  for (int i = 0; i < MAX_MAP; i++) {
+    for (int j = 0; j < MAX_MAP; j++) {
+      if (i < MAX_MAZE && j < MAX_MAZE) {
         maze->vertical[i][j] = 0;
         maze->horizontal[i][j] = 0;
       }
@@ -57,7 +56,6 @@ void menu() {
         grot();
         break;
       case 11:
-        // ToDo вынести отрисовку в подпункты 1 и 2
         // ToDo Задать начальные и конечные точки
         if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
           printf("There is no path\n");
@@ -69,7 +67,6 @@ void menu() {
         break;
       case 21:
         // ToDo Удалить дублирование
-        //        printf("TESTETSETSETSE ---------------\n");
         if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
           printf("There is no path\n");
           maze.map[start_y][start_x] = 2;
@@ -85,7 +82,7 @@ void menu() {
 };
 
 void print_main_menu() {
-  printf("\033[2J");  // ToDo МБ заменить консольным сочетанием ?
+  printf("\033[2J");
   printf("What do you want to do?\n");
   printf("1. Load maze from file\n");
   printf("2. Generate a maze\n");

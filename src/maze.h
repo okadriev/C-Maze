@@ -7,6 +7,8 @@
 
 #define MAZE_X 15
 #define MAZE_Y 7
+#define MAX_MAZE 51
+#define MAX_MAP 101
 
 // ToDo Удалить ?
 // typedef struct Point {
@@ -15,9 +17,9 @@
 //} Point;
 
 typedef struct Maze_struct {
-  int vertical[51][51];
-  int horizontal[51][51];
-  int map[101][101];
+  int vertical[MAX_MAZE][MAX_MAZE];
+  int horizontal[MAX_MAZE][MAX_MAZE];
+  int map[MAX_MAP][MAX_MAP];
   //  Point start;  // ToDo Удалить ?
   //  Point end;    // ToDo Удалить ?
   int x;
