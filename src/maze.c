@@ -219,9 +219,21 @@ void get_map(Maze* maze) {
  * @param maze указатель на структуру лабиринта
  */
 void print_map(Maze maze) {
-  for (int i = 0; i < maze.y * 2 + 1; i++) {
-    for (int j = 0; j < maze.x * 2 + 1; j++) {
-      int pixel = maze.map[i][j];
+  printf("    ");
+  for (int x = 0; x < maze.x; x++) {
+    printf(" %2d ", x);
+  }
+  printf("\n");
+
+  for (int y = 0; y < maze.y * 2 + 1; y++) {
+    if (y != 0 && y != maze.y * 2 && (y & 1)) {
+      printf("%2d ", (y - 1) / 2);
+    } else {
+      printf("   ");
+    }
+
+    for (int x = 0; x < maze.x * 2 + 1; x++) {
+      int pixel = maze.map[y][x];
       if (pixel == 2) {
         printf("\033[43m  \033[0m");
       } else {
