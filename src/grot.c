@@ -1,7 +1,5 @@
 #include "grot.h"
 
-// ToDo добавить fopen для чтения из файла
-
 /**
  * Считываение из консоли начальных данных для генерации пещеры
  * @param grot указатель на структуру пещеры
@@ -52,7 +50,10 @@ int choose_mode(int* n) {
   return mode;
 }
 
-
+/**
+ * ToDo добавить описание
+ * @param chance
+ */
 void chance_for_life(int* chance) {
   while (*chance < MIN_CHANCE || *chance > MAX_CHANCE) {
     printf("Enter the chance of life (1-10): \n");
@@ -107,7 +108,11 @@ void print_grot(Grot* grot) {
   printf("\n");
 }
 
-
+/**
+ * Чтение пещеры из файла
+ * @param grot указатель на структуру пещеры
+ * @param file_name имя файла
+ */
 void read_grot(Grot* grot, char* file_name) {
   FILE* file = fopen(file_name, "r");
   if (!file)
@@ -126,7 +131,11 @@ void read_grot(Grot* grot, char* file_name) {
     fclose(file);
   }
 }
-
+/**
+ * Диалог выбора пещеры из файла
+ * @param cave
+ * @param filename
+ */
 void choose_cave(int* cave, char* filename) {
   while (*cave < 1 || *cave > 2) {
     printf("Choose cave: \n");
@@ -164,7 +173,7 @@ void choose_cave(int* cave, char* filename) {
 }
 
 /**
- * Точка входа в библотеку
+ * Точка входа в библиотеку grot
  */
 void grot() {
   Grot grot = {0};
