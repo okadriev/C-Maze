@@ -33,6 +33,7 @@ void clear_maze(Maze* maze) {
  * Основной цикл программы с выводом меню
  */
 void menu() {
+  CLS;
   print_main_menu();
   int state = 0;
   int user_choice;
@@ -103,7 +104,7 @@ void menu() {
 void print_main_menu() {
   printf("What do you want to do?\n");
   printf("1. Load maze from file\n");
-  printf("2. Generate a maze\n");
+  printf("2. Generate a random maze\n");
   printf("3. Generate cave\n");
   printf("4. Exit\n");
   printf("> ");
