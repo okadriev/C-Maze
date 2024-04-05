@@ -23,7 +23,7 @@ uninstall:
 	sudo rm -f /usr/bin/$(NAME)
 
 clean:
-	-rm -rf $(BUILD)*.* $(BUILD)s21_maze *.o s21_maze
+	-rm -rf $(BUILD)*.* $(BUILD)s21_maze *.o s21_maze tests/*.o tests/test
 
 tests: $(OBJS) $(TEST_OBJS)
 	rm -f main.o
