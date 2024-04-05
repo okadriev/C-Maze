@@ -1,4 +1,5 @@
 #include "grot.h"
+
 #include "maze.h"
 
 /**
@@ -6,6 +7,9 @@
  * @param grot указатель на структуру пещеры
  */
 void user_input(Grot* grot) {
+  grot->row = 50;
+  grot->col = 50;
+  
   while (grot->birth < MIN_LIMIT || grot->birth > MAX_LIMIT) {
     printf("Enter the limit of life (0-7): \n");
     scanf("%d", &grot->birth);
@@ -13,7 +17,7 @@ void user_input(Grot* grot) {
     if (grot->birth < MIN_LIMIT || grot->birth > MAX_LIMIT)
       printf("Incorrect input\n");
   }
-  
+
   while (grot->death < MIN_LIMIT || grot->death > MAX_LIMIT) {
     printf("Enter the limit of death (0-7): \n");
     scanf("%d", &grot->death);
@@ -139,9 +143,9 @@ void read_grot(Grot* grot, char* file_name) {
  */
 void choose_cave(int* cave, char* filename) {
   while (*cave < 1 || *cave > 2) {
-    printf("Choose cave: \n");
-    printf("1. read from file \n");
-    printf("2. random \n");
+    printf("What do you want to do?\n");
+    printf("1. Load cave from file \n");
+    printf("2. Generate random cave \n");
     scanf("%d", cave);
     if (*cave < 1 || *cave > 2) printf("Incorrect input\n");
   }

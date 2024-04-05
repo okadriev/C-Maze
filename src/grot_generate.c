@@ -43,12 +43,13 @@ int count_life(Grot* grot, int i, int j) {
 
   for (int y = i - 1; y <= i + 1; y++)
     for (int x = j - 1; x <= j + 1; x++) {
-      if (y < 0 || x < 0 || y >= grot->row || x >= grot->col)
+      if (y < 0 || x < 0 || y >= grot->row || x >= grot->col) {
         cnt_life++;
-      else if (y == i && x == j)
+      } else if (y == i && x == j) {
         continue;
-      else if (grot->grotto[y][x])
+      } else if (grot->grotto[y][x]) {
         cnt_life++;
+      }
     }
   return cnt_life;
 }
