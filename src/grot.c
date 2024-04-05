@@ -155,9 +155,9 @@ void choose_cave(int* cave, char* filename) {
 
     while (variant < 1 || variant > 4) {
       printf("Choose file: \n");
-      printf("1. %s\n", FILE1);
-      printf("2. %s\n", FILE2);
-      printf("3. %s\n", FILE3);
+      printf("1. %s\n", CAVE_FILE1);
+      printf("2. %s\n", CAVE_FILE2);
+      printf("3. %s\n", CAVE_FILE3);
       printf("4. Your file\n");
       scanf("%d", &variant);
 
@@ -168,11 +168,11 @@ void choose_cave(int* cave, char* filename) {
       printf("Enter the name of the file:\n");
       scanf("%s", filename);
     } else if (variant == 1) {
-      strcpy(filename, FILE1);
+      strcpy(filename, CAVE_FILE1);
     } else if (variant == 2) {
-      strcpy(filename, FILE2);
+      strcpy(filename, CAVE_FILE2);
     } else if (variant == 3) {
-      strcpy(filename, FILE3);
+      strcpy(filename, CAVE_FILE3);
     }
   }
 }

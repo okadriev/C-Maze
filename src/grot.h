@@ -13,9 +13,9 @@
 #define MAX_LIMIT 7
 #define MIN_CHANCE 1
 #define MAX_CHANCE 10
-#define FILE1 "cave/cave1.txt"
-#define FILE2 "cave/cave2.txt"
-#define FILE3 "cave/cave3.txt"
+#define CAVE_FILE1 "../data-samples/example_of_cave_1.txt"
+#define CAVE_FILE2 "../data-samples/example_of_cave_2.txt"
+#define CAVE_FILE3 "../data-samples/example_of_cave_3.txt"
 
 typedef struct Grot_struct {
   int grotto[GROT_Y][GROT_X];

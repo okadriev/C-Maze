@@ -9,6 +9,10 @@
 #define MAX_MAP 101
 #define CLS system("clear")
 
+#define MAZE_FILE1 "../data-samples/example_of_maze_1.txt"
+#define MAZE_FILE2 "../data-samples/example_of_maze_2.txt"
+#define MAZE_FILE3 "../data-samples/example_of_maze_3.txt"
+
 typedef struct Point {
   int x;
   int y;
@@ -32,6 +36,7 @@ void get_coord(int* y, int* x, int mode);
 
 void write_to_file(const Maze* maze, char* filename);
 int read_from_file(Maze* maze, char* filename);
+void choose_maze(char* filename);
 
 void clear_maze(Maze* maze);
 void generate_maze(Maze* maze);

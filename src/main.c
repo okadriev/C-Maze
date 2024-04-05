@@ -22,9 +22,9 @@ void menu() {
 
     if (state == 1) {
       clear_maze(&maze);
-      // ToDo Выбор файла для загрузки
-
-      if (!read_from_file(&maze, "../data-samples/example_of_maze_1.txt")) {
+      char filename[256] = {0};
+      choose_maze(filename);
+      if (!read_from_file(&maze, filename)) {
         maze.end.y = maze.y - 1;
         maze.end.x = maze.x - 1;
         printf("\nPrint labyrinth from file:\n\n");
@@ -84,6 +84,32 @@ void menu() {
     }
   }
 };
+
+void choose_maze(char* filename) {
+  int variant = 0;
+
+  while (variant < 1 || variant > 4) {
+    printf("Choose file: \n");
+    printf("1. %s\n", MAZE_FILE1);
+    printf("2. %s\n", MAZE_FILE2);
+    printf("3. %s\n", MAZE_FILE3);
+    printf("4. Your file\n");
+    scanf("%d", &variant);
+
+    if (variant < 1 || variant > 4) printf("Incorrect input\n");
+  }
+
+  if (variant == 4) {
+    printf("Enter the name of the file:\n");
+    scanf("%s", filename);
+  } else if (variant == 1) {
+    strcpy(filename, MAZE_FILE1);
+  } else if (variant == 2) {
+    strcpy(filename, MAZE_FILE2);
+  } else if (variant == 3) {
+    strcpy(filename, MAZE_FILE3);
+  }
+}
 
 /**
  * Печать main menu
