@@ -12,7 +12,7 @@ TEST_OBJS=$(patsubst %.c,%.o,$(wildcard tests/*.c))
 BUILD=build/
 NAME=s21_maze
 
-.PHONY: all install uninstall clean test gcov_report ext1_flag ext2_flag base_flag
+.PHONY: all install uninstall clean tests gcov_report ext1_flag ext2_flag base_flag
 
 all: $(BUILD)$(NAME)
 
@@ -23,7 +23,7 @@ uninstall:
 	sudo rm -f /usr/bin/$(NAME)
 
 clean:
-	-rm -rf $(BUILD)*.* $(BUILD)s21_maze *.o s21_maze
+	-rm -rf $(BUILD)*.* $(BUILD)s21_maze *.o s21_maze tests/*.o tests/test
 
 tests: $(OBJS) $(TEST_OBJS)
 	rm -f main.o

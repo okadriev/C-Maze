@@ -7,7 +7,7 @@
 
 #define MAX_MAZE 51
 #define MAX_MAP 101
-#define CLS printf("\033[2J")
+#define CLS system("clear")
 
 typedef struct Point {
   int x;

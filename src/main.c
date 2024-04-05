@@ -3,6 +3,7 @@
 
 int main() {
   menu();
+
   return 0;
 }
 
@@ -15,11 +16,14 @@ void menu() {
   int state = 0;
   int user_choice;
   Maze maze = {0};
+
   while ((user_choice = get_variant(4)) != 4) {
     state = state * 10 + user_choice;
+
     if (state == 1) {
       clear_maze(&maze);
       // ToDo Выбор файла для загрузки
+
       if (!read_from_file(&maze, "../data-samples/example_of_maze_1.txt")) {
         maze.end.y = maze.y - 1;
         maze.end.x = maze.x - 1;
@@ -27,10 +31,12 @@ void menu() {
         get_map(&maze);
         print_map(maze);
         print_maze_menu();
+
       } else {
         state = 0;
         print_main_menu();
       }
+
     } else if (state == 2) {
       clear_maze(&maze);
       get_coord(&maze.y, &maze.x, 0);
@@ -42,32 +48,36 @@ void menu() {
       get_map(&maze);
       print_map(maze);
       print_maze_menu();
+
     } else if (state == 3) {
       grot();
+
     } else if (state == 11 || state == 21) {
       if (find_path(&maze, maze.start.y, maze.start.x, maze.end.y,
                     maze.end.x) == 0) {
         printf("\nThere is no path\n\n");
-        //        maze.map[start_y][start_x] = 2; ToDo Удалить ?
-        //        maze.map[end_y][end_x] = 2; ToDo Удалить ?
+
       } else {
         print_map(maze);
       }
       state = 0;
       print_main_menu();
+
     } else if (state == 12 || state == 22) {
       get_coord(&maze.start.y, &maze.start.x, 1);
       get_coord(&maze.end.y, &maze.end.x, 2);
+
       if (find_path(&maze, maze.start.y, maze.start.x, maze.end.y,
                     maze.end.x) == 0) {
         printf("\nThere is no path\n\n");
-        //        maze.map[start_y][start_x] = 2; ToDo Удалить ?
-        //        maze.map[end_y][end_x] = 2; ToDo Удалить ?
+
       } else {
         print_map(maze);
       }
+
       state = 0;
       print_main_menu();
+
     } else {
       state = 0;
       print_main_menu();
