@@ -1,11 +1,18 @@
+#include <check.h>
+
+#include "../grot.h"
 #include "../maze.h"
 
-Suite *XXXXXX(void);
+Suite *generate_grot_cases(void);
+Suite *life_grot_cases(void);
+Suite *count_life_cases(void);
+Suite *compare_cases(void);
 
 int main(void) {
   int failed = 0;
   int success = 0;
-  Suite *maze[] = {XXXXXX,        NULL};
+  Suite *maze[] = {generate_grot_cases(), life_grot_cases(), count_life_cases(),
+                   compare_cases(), NULL};
 
   for (int i = 0; maze[i] != NULL; i++) {
     SRunner *sr = srunner_create(maze[i]);
@@ -20,14 +27,13 @@ int main(void) {
   return failed == 0 ? 0 : 1;
 }
 
-START_TEST(YYYYYY_1) {
-}
-END_TEST
-
-Suite *XXXXXX(void) {
-  Suite *s = suite_create("\033[45m-=XXXXXX=-\033[0m");
-  TCase *tc = tcase_create("XXXXXX");
-  tcase_add_test(tc, YYYYYY_1);
-  suite_add_tcase(s, tc);
-  return s;
-}
+// START_TEST(YYYYYY_1) {}
+// END_TEST
+//
+// Suite *XXXXXX(void) {
+//   Suite *s = suite_create("\033[45m-=XXXXXX=-\033[0m");
+//   TCase *tc = tcase_create("XXXXXX");
+//   tcase_add_test(tc, YYYYYY_1);
+//   suite_add_tcase(s, tc);
+//   return s;
+// }

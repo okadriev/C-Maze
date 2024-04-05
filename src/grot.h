@@ -1,5 +1,5 @@
-#ifndef GROT_H
-#define GROT_H
+#ifndef A1_MAZE_1_GROT_H
+#define A1_MAZE_1_GROT_H
 
 #include <stdio.h>
 #include <stdlib.h>

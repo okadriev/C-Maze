@@ -23,12 +23,13 @@ uninstall:
 	sudo rm -f /usr/bin/$(NAME)
 
 clean:
-	-rm -rf $(BUILD)*.* $(BUILD)s21_maze
+	-rm -rf $(BUILD)*.* $(BUILD)s21_maze *.o s21_maze
 
-tests: # ToDo
-	#$(CC) $(CFLAGS) $^ -o test -lcheck -lm -lsubunit -Lbuild -l:XXXXXX.a
-	#-clear
-	#-./test
+tests: $(OBJS) $(TEST_OBJS)
+	rm -f main.o
+	$(CC) $(CFLAGS) *.o $(TEST_OBJS) -o test -lcheck -lm -lsubunit -Lbuild
+	-clear
+	./test
 
 $(BUILD)$(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@

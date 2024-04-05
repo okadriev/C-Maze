@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAZE_X 15
-#define MAZE_Y 7
 #define MAX_MAZE 51
 #define MAX_MAP 101
 #define CLS printf("\033[2J")
