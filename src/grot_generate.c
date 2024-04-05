@@ -13,7 +13,7 @@ void generate_grot(Grot* grot) {
 }
 
 /**
- * ToDo добавить описание
+ * Изменение состояния пещеры
  * @param grot указатель на структуру пещеры
  */
 void life_grot(Grot* grot) {
@@ -32,11 +32,11 @@ void life_grot(Grot* grot) {
 }
 
 /**
- * ToDo добавить описание
- * @param grot
- * @param i
- * @param j
- * @return
+ * Подсчет живых клеток
+ * @param grot указатель на структуру пещеры
+ * @param i - строка
+ * @param j - столбец
+ * @return количество живых клеток
  */
 int count_life(Grot* grot, int i, int j) {
   int cnt_life = 0;
@@ -54,9 +54,9 @@ int count_life(Grot* grot, int i, int j) {
 }
 
 /**
- * ToDo добавить описание
- * @param grotto
- * @return
+ * Сравнение текущего и прошлого состояния пещеры
+ * @param grotto - матрица пещеры
+ * @return 1 если состояния равны, 0 если нет
  */
 int compare(int grotto[GROT_Y][GROT_X]) {
   int res = 1;
