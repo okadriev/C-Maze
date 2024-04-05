@@ -166,7 +166,6 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
   int y = y_1 * 2 + 1;
   maze->map[y][x] = -1;
   if (x_1 != x_2 || y_1 != y_2) {
-    // ToDo можно немного оптимизировать добавив ( && !get_path) в условие if
     if (maze->map[y][x + 1] == 0 && maze->map[y][x + 2] == 0) {
       if (find_path(maze, y_1, x_1 + 1, y_2, x_2)) {
         maze->map[y][x] = 2;

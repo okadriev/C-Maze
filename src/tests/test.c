@@ -7,12 +7,19 @@ Suite *generate_grot_cases(void);
 Suite *life_grot_cases(void);
 Suite *count_life_cases(void);
 Suite *compare_cases(void);
+Suite *maze_generate(void);
+Suite *maze_find_path(void);
 
 int main(void) {
   int failed = 0;
   int success = 0;
-  Suite *maze[] = {generate_grot_cases(), life_grot_cases(), count_life_cases(),
-                   compare_cases(), NULL};
+  Suite *maze[] = {generate_grot_cases(),
+                   life_grot_cases(),
+                   count_life_cases(),
+                   compare_cases(),
+                   maze_generate(),
+                   maze_find_path(),
+                   NULL};
 
   for (int i = 0; maze[i] != NULL; i++) {
     SRunner *sr = srunner_create(maze[i]);
@@ -29,11 +36,15 @@ int main(void) {
 
 START_TEST(generate_grot_1) {
   Grot grot = {0};
+  grot.col = 10;
+  grot.row = 10;
+  grot.chance = 5;
+  grot.death = 3;
+  grot.birth = 2;
   generate_grot(&grot);
+  life_grot(&grot);
 
   ck_assert(grot.grotto != NULL);
-  ck_assert(grot.birth == 0);
-  ck_assert(grot.death == 0);
 }
 END_TEST
 
@@ -149,13 +160,67 @@ Suite *compare_cases(void) {
   return c;
 }
 
-// START_TEST(YYYYYY_1) {}
-// END_TEST
-//
-// Suite *XXXXXX(void) {
-//   Suite *s = suite_create("\033[45m-=XXXXXX=-\033[0m");
-//   TCase *tc = tcase_create("XXXXXX");
-//   tcase_add_test(tc, YYYYYY_1);
-//   suite_add_tcase(s, tc);
-//   return s;
-// }
+START_TEST(maze_generate_1) {
+  Maze maze = {0};
+  maze.x = 10;
+  maze.y = 10;
+
+  generate_maze(&maze);
+
+  for (int i = 0; i < maze.y; i++) {
+    ck_assert(maze.horizontal[maze.y - 1][i] == 1);
+    ck_assert(maze.vertical[i][maze.x - 1] == 1);
+  }
+}
+END_TEST
+
+Suite *maze_generate(void) {
+  Suite *c = suite_create("maze_generate_cases");
+  TCase *tc = tcase_create("maze_generate_1");
+
+  tcase_add_test(tc, maze_generate_1);
+
+  suite_add_tcase(c, tc);
+
+  return c;
+}
+
+START_TEST(maze_find_path_1) {
+  Maze maze = {0};
+  maze.x = 0;
+  maze.y = 0;
+  print_map(maze);
+  clear_maze(&maze);
+  int test_array[101] = {
+      2,  2,  2,  2,  2,  -1, -1, -1, 2,  2,  2,  2,  2,  2,  2,  2, 2,
+      2,  2,  2,  -1, 2,  2,  2,  2,  2,  -1, 2,  2,  2,  -1, 2,  2, 2,
+      2,  2,  -1, 2,  2,  2,  -1, -1, -1, 2,  2,  -1, -1, -1, -1, 2, -1,
+      -1, -1, -1, -1, -1, -1, 2,  2,  2,  -1, -1, -1, -1, -1, 2,  2, 2,
+      2,  2,  -1, -1, -1, -1, -1, 2,  -1, -1, -1, -1, -1, 2,  2,  2, 2,
+      2,  -1, -1, -1, -1, 2,  2,  -1, -1, 2,  2,  -1, -1, -1, -1};
+  int c = 0;
+  read_from_file(&maze, MAZE_FILE1);
+  get_map(&maze);
+
+  find_path(&maze, 1, 1, 9, 0);
+
+  for (int i = 0; i < maze.y; i++) {
+    for (int j = 0; j < maze.x; j++) {
+      ck_assert(maze.map[i * 2 + 1][j * 2 + 1] == test_array[c++]);
+    }
+  }
+
+  write_to_file(&maze, "../data-samples/test.txt");
+}
+END_TEST
+
+Suite *maze_find_path(void) {
+  Suite *c = suite_create("maze_find_path_cases");
+  TCase *tc = tcase_create("maze_find_path_1");
+
+  tcase_add_test(tc, maze_find_path_1);
+
+  suite_add_tcase(c, tc);
+
+  return c;
+}

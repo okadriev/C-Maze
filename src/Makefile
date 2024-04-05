@@ -23,7 +23,7 @@ uninstall:
 	sudo rm -f /usr/bin/$(NAME)
 
 clean:
-	-rm -rf $(BUILD)*.* $(BUILD)s21_maze *.o s21_maze tests/*.o tests/test *.gcno *.gcda *.info
+	-rm -rf $(BUILD)*.* $(BUILD)s21_maze *.o s21_maze tests/*.o tests/test *.gcno *.gcda *.info test
 
 tests: $(OBJS) $(TEST_OBJS)
 	rm -f main.o
@@ -38,7 +38,7 @@ $(BUILD)$(NAME): $(OBJS)
 
 $(OBJS): $(SRC)
 
-gcov_report: clean ext1_flag $(OBJS) base_flag $(TEST_OBJS) ext2_flag test
+gcov_report: clean ext1_flag $(OBJS) base_flag $(TEST_OBJS) ext2_flag
 	-rm -rf report/ main.o
 	$(CC) $(CFLAGS) *.o $(TEST_OBJS) -o test -lcheck -lm -lsubunit -Lbuild
 	./test
