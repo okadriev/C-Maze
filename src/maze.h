@@ -29,7 +29,9 @@ typedef struct Maze_struct {
 
 void menu();
 void print_main_menu();
+void print_maze_menu();
 int get_variant(int count);
+void get_coord(int* y, int* x, int mode);
 
 void write_to_file(const Maze* maze, char* filename);
 void read_from_file(Maze* maze, char* filename);
@@ -39,6 +41,6 @@ void generate_maze(Maze* maze);
 void get_map(Maze* maze);
 void print_map(Maze maze);
 int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2);
-void group_swap(int group[][MAZE_X + 1], int target, int swap, int line);
+void group_swap(int group[][MAX_MAZE], int target, int swap, int line);
 
 #endif
