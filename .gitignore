@@ -138,3 +138,4 @@ dkms.conf
 /.cmake/
 
 data-samples/test.txt
+/src/report/
