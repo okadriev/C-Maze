@@ -12,7 +12,7 @@ TEST_OBJS=$(patsubst %.c,%.o,$(wildcard tests/*.c))
 BUILD=build/
 NAME=s21_maze
 
-.PHONY: all install uninstall clean test gcov_report ext1_flag ext2_flag base_flag
+.PHONY: all install uninstall clean tests gcov_report ext1_flag ext2_flag base_flag
 
 all: $(BUILD)$(NAME)
 

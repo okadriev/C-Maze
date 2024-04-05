@@ -128,6 +128,7 @@ void get_map(Maze* maze) {
  * @param maze указатель на структуру лабиринта
  */
 void print_map(Maze maze) {
+  CLS;
   printf("    ");
   for (int x = 0; x < maze.x; x++) {
     printf(" %2d ", x);
