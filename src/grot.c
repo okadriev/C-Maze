@@ -1,4 +1,5 @@
 #include "grot.h"
+#include "maze.h"
 
 /**
  * Считываение из консоли начальных данных для генерации пещеры
@@ -12,7 +13,7 @@ void user_input(Grot* grot) {
     if (grot->birth < MIN_LIMIT || grot->birth > MAX_LIMIT)
       printf("Incorrect input\n");
   }
-
+  
   while (grot->death < MIN_LIMIT || grot->death > MAX_LIMIT) {
     printf("Enter the limit of death (0-7): \n");
     scanf("%d", &grot->death);
@@ -51,8 +52,8 @@ int choose_mode(int* n) {
 }
 
 /**
- * ToDo добавить описание
- * @param chance
+ * Считываение из консоли ввода пользователя шанс на жизнь для клетки
+ * @param chance шанс на жизнь
  */
 void chance_for_life(int* chance) {
   while (*chance < MIN_CHANCE || *chance > MAX_CHANCE) {
@@ -69,10 +70,9 @@ void chance_for_life(int* chance) {
  * @param grot указатель на структуру пещеры
  */
 void print_step_by_step(Grot* grot) {
-  // ToDo Возможно необходимо чистить экран перед очередным выводом ?
-  // Есть дефайн CLS
   int iteration = 1;
   while (iteration == 1) {
+    CLS;
     print_grot(grot);
     life_grot(grot);
 
@@ -88,6 +88,7 @@ void print_step_by_step(Grot* grot) {
  */
 void print_auto(Grot* grot, int n) {
   while (!compare(grot->grotto)) {
+    CLS;
     print_grot(grot);
     life_grot(grot);
     sleep(n);
@@ -133,8 +134,8 @@ void read_grot(Grot* grot, char* file_name) {
 }
 /**
  * Диалог выбора пещеры из файла
- * @param cave
- * @param filename
+ * @param cave режим выбора пещеры
+ * @param filename имя файла
  */
 void choose_cave(int* cave, char* filename) {
   while (*cave < 1 || *cave > 2) {
@@ -202,5 +203,3 @@ void grot() {
   else if (mode == 2)
     print_auto(&grot, n);
 }
-
-// int main() { grot(); } // ToDo Удалить
