@@ -9,7 +9,7 @@
 void user_input(Grot* grot) {
   grot->row = 50;
   grot->col = 50;
-  
+
   while (grot->birth < MIN_LIMIT || grot->birth > MAX_LIMIT) {
     printf("Enter the limit of life (0-7): \n");
     scanf("%d", &grot->birth);
