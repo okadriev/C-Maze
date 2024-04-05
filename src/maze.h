@@ -11,18 +11,17 @@
 #define MAX_MAP 101
 #define CLS printf("\033[2J")
 
-// ToDo Удалить ?
-// typedef struct Point {
-//  int x;
-//  int y;
-//} Point;
+typedef struct Point {
+  int x;
+  int y;
+} Point;
 
 typedef struct Maze_struct {
   int vertical[MAX_MAZE][MAX_MAZE];
   int horizontal[MAX_MAZE][MAX_MAZE];
   int map[MAX_MAP][MAX_MAP];
-  //  Point start;  // ToDo Удалить ?
-  //  Point end;    // ToDo Удалить ?
+  Point start;
+  Point end;
   int x;
   int y;
 } Maze;

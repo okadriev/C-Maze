@@ -23,6 +23,10 @@ void clear_maze(Maze* maze) {
   }
   maze->x = 0;
   maze->y = 0;
+  maze->start.y = 0;
+  maze->start.x = 0;
+  maze->end.y = 0;
+  maze->end.x = 0;
 }
 
 /**
@@ -33,19 +37,14 @@ void menu() {
   int state = 0;
   int user_choice;
   Maze maze = {0};
-  // ToDo Добавить инициализацию новой/существующей структуры
-  int start_x = 0;  // add struct point(x,y)?
-  int start_y = MAZE_Y - 1;
-  int end_x = MAZE_X - 1;
-  int end_y = 0;
   while ((user_choice = get_variant(4)) != 4) {
     state = state * 10 + user_choice;
     if (state == 1) {
-      //      CLS;
       clear_maze(&maze);
-      // ToDo Возможность указания произвольного файла, либо выбора из
-      // преддефайнов ?
+      // ToDo Выбор файла для загрузки
       if (!read_from_file(&maze, "../data-samples/example_of_maze_1.txt")) {
+        maze.end.y = maze.y - 1;
+        maze.end.x = maze.x - 1;
         printf("\nPrint labyrinth from file:\n\n");
         get_map(&maze);
         print_map(maze);
@@ -58,6 +57,8 @@ void menu() {
       clear_maze(&maze);
       get_coord(&maze.y, &maze.x, 0);
       generate_maze(&maze);
+      maze.end.y = maze.y - 1;
+      maze.end.x = maze.x - 1;
       printf("\nPrint generate labyrinth:\n\n");
       write_to_file(&maze, "../data-samples/test.txt");
       get_map(&maze);
@@ -66,22 +67,24 @@ void menu() {
     } else if (state == 3) {
       grot();
     } else if (state == 11 || state == 21) {
-      if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
+      if (find_path(&maze, maze.start.y, maze.start.x, maze.end.y,
+                    maze.end.x) == 0) {
         printf("\nThere is no path\n\n");
-        maze.map[start_y][start_x] = 2;
-        maze.map[end_y][end_x] = 2;
+        //        maze.map[start_y][start_x] = 2; ToDo Удалить ?
+        //        maze.map[end_y][end_x] = 2; ToDo Удалить ?
       } else {
         print_map(maze);
       }
       state = 0;
       print_main_menu();
     } else if (state == 12 || state == 22) {
-      get_coord(&start_y, &start_x, 1);
-      get_coord(&end_y, &end_x, 2);
-      if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
+      get_coord(&maze.start.y, &maze.start.x, 1);
+      get_coord(&maze.end.y, &maze.end.x, 2);
+      if (find_path(&maze, maze.start.y, maze.start.x, maze.end.y,
+                    maze.end.x) == 0) {
         printf("\nThere is no path\n\n");
-        maze.map[start_y][start_x] = 2;
-        maze.map[end_y][end_x] = 2;
+        //        maze.map[start_y][start_x] = 2; ToDo Удалить ?
+        //        maze.map[end_y][end_x] = 2; ToDo Удалить ?
       } else {
         print_map(maze);
       }
