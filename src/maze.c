@@ -62,6 +62,7 @@ void menu() {
         grot();
         break;
       case 11:
+        // ToDo попробовать на if
         // ToDo Задать начальные и конечные точки
         if (find_path(&maze, start_y, start_x, end_y, end_x) == 0) {
           printf("There is no path\n");
@@ -284,6 +285,13 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
   return get_path;
 }
 
+/**
+ * Замена элементов в строке swap на target
+ * @param group массив групп
+ * @param target целевая группа
+ * @param swap исходная группа
+ * @param line порядковый номер строки
+ */
 void group_swap(int group[][MAZE_X + 1], int target, int swap, int line) {
   for (int i = 0; i < MAZE_X; i++) {
     if (group[line][i] == swap) {
@@ -297,14 +305,21 @@ void group_swap(int group[][MAZE_X + 1], int target, int swap, int line) {
  * @param maze указатель на структуру лабиринта
  */
 void generate_maze(Maze* maze) {
+  // ToDo Добавить ввод размерности
   srand(time(NULL));  // ToDo запускать один раз в main ?
-  maze->y = MAZE_Y;
+  maze->y = MAZE_Y;   // ToDo scanf и заменить MAZE_Y, MAZE_X
   maze->x = MAZE_X;
   int group[MAZE_Y + 1][MAZE_X + 1] = {0};
   int group_count = 1;
 
-  for (int y = 0; y < MAZE_Y; y++) {
-    for (int x = 0; x < MAZE_X; x++) {
+  //  for (int y = 0; y < maze->y; y++) {
+  //    for (int x = 0; x < maze->x; x++) {
+  //      group[y][x] = 0;
+  //    }
+  //  }
+
+  for (int y = 0; y < maze->y; y++) {
+    for (int x = 0; x < maze->x; x++) {
       if (!group[y][x]) group[y][x] = group_count++;
     }
 
