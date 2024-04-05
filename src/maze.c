@@ -45,11 +45,15 @@ void menu() {
       clear_maze(&maze);
       // ToDo Возможность указания произвольного файла, либо выбора из
       // преддефайнов ?
-      read_from_file(&maze, "../data-samples/example_of_maze_1.txt");
-      printf("\nPrint labyrinth from file:\n\n");
-      get_map(&maze);
-      print_map(maze);
-      print_maze_menu();
+      if (!read_from_file(&maze, "../data-samples/example_of_maze_1.txt")) {
+        printf("\nPrint labyrinth from file:\n\n");
+        get_map(&maze);
+        print_map(maze);
+        print_maze_menu();
+      } else {
+        state = 0;
+        print_main_menu();
+      }
     } else if (state == 2) {
       clear_maze(&maze);
       get_coord(&maze.y, &maze.x, 0);
@@ -128,6 +132,13 @@ int get_variant(int count) {
   return user_choice;
 }
 
+/**
+ * Считывание размерности лабиринта, начальных и конечных точек пути
+ * @param y y-координата
+ * @param x x-координата
+ * @param mode режим: 0 - размерность лабиринта, 1 - начальная точка пути, 2 -
+ * конечная точка пути
+ */
 void get_coord(int* y, int* x, int mode) {
   char s[256];
   if (mode == 0) {
@@ -197,8 +208,8 @@ void write_to_file(const Maze* maze, char* filename) {
  * @param maze указатель на структуру лабиринта
  * @param filename имя файла
  */
-void read_from_file(Maze* maze, char* filename) {
-  // ToDo Возвращать ошибку в случае сбоя
+int read_from_file(Maze* maze, char* filename) {
+  int error = 0;
   FILE* file = fopen(filename, "rt");
   if (file != NULL) {
     int cur = 0;
@@ -206,28 +217,35 @@ void read_from_file(Maze* maze, char* filename) {
     int flag = 1;
     int i = 0;
     int j = 0;
-    // ToDo Обработать ошибку scanf
-    fscanf(file, "%d%d\n", &maze->y, &maze->x);
-    while ((cur = fgetc(file)) != EOF) {
-      if (cur == '1' || cur == '0') {
-        if (flag) {
-          maze->vertical[i][j] = cur - 48;
-        } else {
-          maze->horizontal[i][j] = cur - 48;
+    if (fscanf(file, "%d%d\n", &maze->y, &maze->x) != 0) {
+      while ((cur = fgetc(file)) != EOF) {
+        if (cur == '1' || cur == '0') {
+          if (flag) {
+            maze->vertical[i][j] = cur - 48;
+          } else {
+            maze->horizontal[i][j] = cur - 48;
+          }
+          j++;
+        } else if (cur == '\n' && last == '\n') {
+          flag = 0;
+          i = 0;
+          j = 0;
+        } else if (cur == '\n') {
+          i++;
+          j = 0;
         }
-        j++;
-      } else if (cur == '\n' && last == '\n') {
-        flag = 0;
-        i = 0;
-        j = 0;
-      } else if (cur == '\n') {
-        i++;
-        j = 0;
+        last = cur;
       }
-      last = cur;
+      fclose(file);
+    } else {
+      printf("Incorrect file.\n");
+      error = 1;
     }
-    fclose(file);
+  } else {
+    printf("Bad file.\n");
+    error = 1;
   }
+  return error;
 }
 
 /**

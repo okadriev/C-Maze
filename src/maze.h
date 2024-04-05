@@ -34,7 +34,7 @@ int get_variant(int count);
 void get_coord(int* y, int* x, int mode);
 
 void write_to_file(const Maze* maze, char* filename);
-void read_from_file(Maze* maze, char* filename);
+int read_from_file(Maze* maze, char* filename);
 
 void clear_maze(Maze* maze);
 void generate_maze(Maze* maze);
