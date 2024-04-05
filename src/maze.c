@@ -330,6 +330,13 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
   return get_path;
 }
 
+/**
+ * Замена элементов в строке swap на target
+ * @param group массив групп
+ * @param target целевая группа
+ * @param swap исходная группа
+ * @param line порядковый номер строки
+ */
 void group_swap(int group[][MAX_MAZE], int target, int swap, int line) {
   for (int i = 0; i < MAX_MAZE; i++) {
     if (group[line][i] == swap) {
