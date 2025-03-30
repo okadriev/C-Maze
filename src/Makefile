@@ -16,11 +16,9 @@ NAME=s21_maze
 
 all: $(BUILD)$(NAME)
 
-install: all
-	sudo cp $(BUILD)$(NAME) /usr/bin/$(NAME)
+install: $(BUILD)$(NAME)
 
-uninstall:
-	sudo rm -f /usr/bin/$(NAME)
+uninstall: clean
 
 clean:
 	-rm -rf $(BUILD)*.* $(BUILD)s21_maze *.o s21_maze tests/*.o tests/test *.gcno *.gcda *.info test
@@ -33,8 +31,7 @@ tests: $(OBJS) $(TEST_OBJS)
 
 $(BUILD)$(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
-	$@
-	make clean
+	make
 
 $(OBJS): $(SRC)
 

@@ -198,6 +198,7 @@ int find_path(Maze* maze, int y_1, int x_1, int y_2, int x_2) {
     maze->map[y][x] = 2;
     get_path = 1;
   }
+
   return get_path;
 }
 
